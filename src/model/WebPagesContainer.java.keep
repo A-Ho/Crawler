@@ -1,0 +1,154 @@
+/*
+ * Copyright (c) 2009. 財團法人資訊工業策進會. All right reserved.
+ */
+package model;
+
+import java.sql.Connection;
+import java.sql.Types;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import database.JDBCConnector;
+import database.SqlParameter;
+import database.SqlUpdater;
+
+import utils.HttpProxySetter;
+
+/**
+ * 網頁整合容器<p>
+ * 此類別不提供 static method
+ * 擷取網頁的統整資料結構, 使用時請單獨 new constructor
+ * @author 960122
+ */
+public class WebPagesContainer {
+
+	/**
+	 * 擷取網頁的統整資料結構, 使用時請單獨 new constructor
+	 */
+	public WebPagesContainer(final String url, int depth){
+		if(url == null || url.length()==0){
+			System.out.println("網址不得為空");
+			return;
+		}
+		if(depth < 1 || depth > 10){
+			System.out.println("擷取網頁深度小於 1 頁或過深");
+			this.depth = 1;
+		}
+		this.indexUrl = url;
+		this.depth = depth;
+	}
+	
+	private int depth = 1;
+
+	private String indexUrl;
+	
+	private Map<String, WebPage> webPagesMap = new HashMap<String, WebPage>();
+	
+	/**
+	 * 增加網頁入此容器
+	 */
+	public void add(WebPage wp){
+		if(!this.webPagesMap.containsKey(wp.getUrl())){
+			this.webPagesMap.put(wp.getUrl(), wp);
+		} else {
+			//do nothing
+			//TODO 是否要判斷同 key 下的 page 內容是否相同?
+		}
+	}
+	
+	private SqlUpdater getSqlUpdater(){
+		Connection conn = JDBCConnector.getWDMRConnetion("localhost:3306", "wdmr_base", "wdmr", "wdmr135");
+		SqlUpdater sqlUpdater = new SqlUpdater(conn);
+		return sqlUpdater;
+	}
+	
+	private void insertToDB(SqlUpdater sqlUpdater, WebPage wp){
+
+		final String uuid = UUID.randomUUID().toString();
+		List<SqlParameter> sqlParamList = new LinkedList<SqlParameter>();
+		sqlParamList.add(new SqlParameter(Types.CHAR, uuid));
+		sqlParamList.add(new SqlParameter(Types.VARCHAR, wp.getUrl()));
+		sqlParamList.add(new SqlParameter(Types.VARCHAR, ""));
+		sqlParamList.add(new SqlParameter(Types.TIMESTAMP, new java.sql.Timestamp(new Date().getTime())));
+		final StringBuilder sql = new StringBuilder();
+		sql.append("INSERT INTO WEB_CONTENT (SN, URL, CONTENT, UPDATE_TIME) VALUES (?, ?, ?, ?)");
+		
+		sqlUpdater.executeSql(sql.toString(), sqlParamList);
+	}
+	
+	/** 所有要走訪的網頁 */
+	List<WebPage> urlQueue = new LinkedList<WebPage>();
+
+	public void crawl(){
+		WebPage wp = WebPage.createWebPage(this.indexUrl, 1);
+		this.urlQueue.add(wp);
+//		SqlUpdater sqlUpdater = getSqlUpdater();
+//		insertToDB(sqlUpdater, wp);
+		
+		while(!this.urlQueue.isEmpty()){
+			WebPage tmpWebPage = (WebPage)this.urlQueue.get(0);
+			System.out.println("取得要parse的網址:"+tmpWebPage.getUrl()+"\n");
+			this.urlQueue.remove(0);
+			int level = tmpWebPage.getLevel().intValue();
+			System.out.println("這是第幾層? "+level);
+			if(level < depth){
+				level++;
+				for(String tmpLink : tmpWebPage.getHyperLinkList()){
+					WebPage tmpWebPage2 = WebPage.createWebPage(tmpLink, level);
+					if(tmpWebPage2 == null){
+						continue;
+					}
+					
+//					insertToDB(sqlUpdater, tmpWebPage2);
+					
+					System.out.println("加入佇列的網址:"+tmpWebPage2.getUrl()+"\n");
+					urlQueue.add(tmpWebPage2);
+				}
+			}
+			System.out.println("還剩幾個url沒爬: "+urlQueue.size());
+		}
+		
+//		FileUtils.newFile(log.toString(), "D://1", FileType.txt);
+		System.out.println("log產生成功");
+	}
+	
+	/**
+	 * @return the depth
+	 */
+	public Integer getDepth() {
+		return depth;
+	}
+
+	/**
+	 * @param depth the depth to set
+	 */
+	public void setDepth(Integer depth) {
+		this.depth = depth;
+	}
+
+	/**
+	 * @return the indexUrl
+	 */
+	public String getIndexUrl() {
+		return indexUrl;
+	}
+
+	/**
+	 * @param indexUrl the indexUrl to set
+	 */
+	public void setIndexUrl(String indexUrl) {
+		this.indexUrl = indexUrl;
+	}
+
+	
+	public static void main(String[] args) {
+		
+		final String url = "http://tw.lifestyle.yahooapis.com/v0.3/Search.getTopQuery?appid=fjcNpL7V34EyjfqCBgHYTRZH7bcgJ3Q8yDAXgCflmEdyg8JFTDL.RkAvA_ge3YNROg";
+		HttpProxySetter.IIISetting();
+		System.out.println(WebPage.createWebPage(url, 1).getHtmlCode());
+	}
+}

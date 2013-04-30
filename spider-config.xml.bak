@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<spider>
+	<enviroment>
+	  <proxy-host>proxy.iii.org.tw</proxy-host>
+	  <proxy-port>3128</proxy-port>
+	</enviroment>
+	
+  <job>
+  	<description></description>
+  	
+   <start-url>http://e-bus.taipei.gov.tw/pda/queryPage.aspx</start-url>
+    <minig-depth>2</minig-depth>
+    <download-range>
+    	<url></url>
+    </download-range>	
+    <thread>1</thread>
+    <encoding>utf-8</encoding>
+    <sleep-time>0</sleep-time>
+    
+    <disk-output>
+      <file-path>E:\WDMRDB\ebus</file-path>
+      <max-size>10000</max-size>	
+    </disk-output>
+  
+    <database-output>
+    	<connection>
+        <host></host>
+        <port></port>
+        <user></user>
+        <password></password>
+      </connection>
+      <table></table>
+    </database-output>
+  
+    <finish-notify>
+      <email>shchang@iii.org.tw</email>
+      <msn></msn>
+      <plurk></plurk>
+    </finish-notify>
+    	  
+  </job>
+  
+</spider>

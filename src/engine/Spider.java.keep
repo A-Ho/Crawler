@@ -1,0 +1,375 @@
+package engine;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.sql.Connection;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+
+import model.WebPage;
+
+import org.htmlparser.nodes.RemarkNode;
+import org.htmlparser.nodes.TextNode;
+import org.htmlparser.*;
+import org.htmlparser.tags.*;
+import org.htmlparser.Parser;
+import org.htmlparser.filters.StringFilter;
+import org.htmlparser.util.NodeIterator;
+import org.htmlparser.util.NodeList;
+import org.htmlparser.util.ParserException;
+
+import database.JDBCConnector;
+import database.SqlParameter;
+import database.SqlUpdater;
+
+import utils.FileUtils;
+import utils.UrlUtil;
+import utils.FileUtils.FileType;
+
+import java.util.Queue;
+import java.util.LinkedList;
+
+/**
+ * 
+ */
+public class Spider implements Runnable {
+	boolean search_key_words = false;
+
+	int count = 0;
+
+//	int limitsite = 10;
+
+//	int countsite = 1;
+
+	String keyword = "";// 搜索關鍵字
+
+	Parser parser = new Parser();
+
+	// List linklist = new ArrayList();
+	String startsite = "";// 搜索的其實站點
+
+//	SearchResultBean srb;// 保存搜索結果
+	
+	List<SearchResultBean> resultlist = new ArrayList<SearchResultBean>();// 搜索到關鍵字鏈結列表
+
+	List<String> searchedsite = new ArrayList<String>();// 已經被搜索站點列表
+
+	Queue<String> linklist = new LinkedList<String>();// 需解析的鏈結列表
+
+	HashMap<String, ArrayList<String>> disallowListCache = new HashMap<String, ArrayList<String>>();
+
+	public Spider(String keyword, String startsite) {
+		this.keyword = keyword;
+		this.startsite = startsite;
+		linklist.add(startsite);
+//		srb = new SearchResultBean();
+	}
+
+	public void run() {
+		// TODO Auto-generated method stub
+		search(linklist);
+
+	}
+
+	public void search(Queue<String> queue) {
+
+		File file = new java.io.File("E://WDMRDB//Wiki//" + Calendar.getInstance().getTimeInMillis() + ".txt");
+		FileWriter fw = null;
+		try {
+			fw = new FileWriter(file);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		String url = "";
+		while (!queue.isEmpty()) {
+			url = queue.peek().toString();// 查找列隊
+			try {
+				if (!isSearched(searchedsite, url)) {
+//					if (isRobotAllowed(new URL(url)))// 檢查該鏈結是否被允許搜索
+//					else
+//						System.out.println("this page is disallowed to search");
+
+					SearchResultBean srb = processHtml(url);
+					try {
+						fw.write(srb.getText().toString());
+//						fw.append(srb.getText().toString());
+						this.count++;
+						System.out.println(this.count);
+//						if(count == 1000){
+//							fw.close();
+//							file = new java.io.File("E://WDMRDB//Wiki//" + Calendar.getInstance().getTimeInMillis() + ".txt");
+//							fw = new FileWriter(file);
+//							this.count = 0;
+//						}
+					} catch (IOException e) {
+						System.out.println("寫入檔案發生錯誤");
+						e.printStackTrace();
+					}
+						
+						
+				}
+			} catch (Exception ex) {
+
+			}
+			queue.remove();
+		}
+
+	}
+	
+	/**
+	 * 解析HTML
+	 * 
+	 * @param url
+	 * @throws ParserException
+	 * @throws Exception
+	 */
+	public SearchResultBean processHtml(String url) throws ParserException, Exception {
+		searchedsite.add(url);
+//		count = 0;
+		System.out.println("searching ... :" + url);
+		parser.setURL(url);
+		parser.setEncoding("UTF-8");
+		URLConnection uc = parser.getConnection();
+		uc.connect();
+		
+		SearchResultBean srb = new SearchResultBean();
+		
+		//reset
+//		srb.resetText();
+		
+		// uc.getLastModified();
+		NodeIterator nit = parser.elements();
+		while (nit.hasMoreNodes()) {
+			Node node = nit.nextNode();
+			parserNode(node, srb);
+		}
+		srb.setKeywords(keyword);
+		srb.setUrl(url);
+//		srb.setCount_key_words(count);
+
+		//
+		srb.patternText();
+//		System.out.println(srb.getText());
+//		this.resultlist.add(srb);
+
+//		if(this.resultlist.size() == 1000){
+//			String content = "";
+//			for(SearchResultBean tmpSrb : this.resultlist){
+//				content += tmpSrb.getText();
+//			}
+//			this.resultlist = new ArrayList<SearchResultBean>();
+//		}
+		
+        return srb;		
+	}
+	
+	private SqlUpdater getSqlUpdater(){
+		Connection conn = JDBCConnector.getWDMRConnetion("localhost:3306", "wdmr_base", "wdmr", "wdmr135");
+		SqlUpdater sqlUpdater = new SqlUpdater(conn);
+		return sqlUpdater;
+	}
+	
+	private void insertToDB(SqlUpdater sqlUpdater, String url, String text){
+
+		final String uuid = UUID.randomUUID().toString();
+		List<SqlParameter> sqlParamList = new LinkedList<SqlParameter>();
+		sqlParamList.add(new SqlParameter(Types.CHAR, uuid));
+		sqlParamList.add(new SqlParameter(Types.VARCHAR, url));
+		sqlParamList.add(new SqlParameter(Types.VARCHAR, text));
+		sqlParamList.add(new SqlParameter(Types.TIMESTAMP, new java.sql.Timestamp(new Date().getTime())));
+		final StringBuilder sql = new StringBuilder();
+		sql.append("INSERT INTO WEB_CONTENT_HTML (SN, URL, HTML_CODE, UPDATE_TIME) VALUES (?, ?, ?, ?)");
+		
+		sqlUpdater.executeSql(sql.toString(), sqlParamList);
+	}
+	
+	/**
+	 * 處理HTML標籤
+	 * 
+	 * @param tag
+	 * @throws Exception
+	 */
+	public void dealTag(Tag tag, SearchResultBean srb) throws Exception {
+		NodeList list = tag.getChildren();
+		if (list != null) {
+			NodeIterator it = list.elements();
+			while (it.hasMoreNodes()) {
+				Node node = it.nextNode();
+				parserNode(node, srb);
+			}
+		}
+	}
+
+	/**
+	 * 處理HTML標籤結點
+	 * 
+	 * @param node
+	 * @throws Exception
+	 */
+	public void parserNode(Node node, SearchResultBean srb) throws Exception {
+		if (node instanceof TextNode) {// 判斷是否是文本結點
+			TextNode sNode = (TextNode) node;
+			srb.addText(sNode.getText());
+//			StringFilter sf = new StringFilter(keyword, false);
+//			search_key_words = sf.accept(sNode);
+//			if (search_key_words) {
+//				count++;
+//			}
+			// System.out.println("text is :"+sNode.getText().trim());
+		} else if (node instanceof Tag) {// 判斷是否是標籤庫結點
+			Tag atag = (Tag) node;
+			if (atag instanceof TitleTag) {// 判斷是否是標TITLE結點
+				srb.setTitle(atag.getText());
+			}
+			if (atag instanceof LinkTag) {// 判斷是否是標LINK結點
+				LinkTag linkatag = (LinkTag) atag;
+				checkLink(linkatag.getLink(), linklist, "http://zh.wikipedia.org");
+				// System.out.println("-----------------this is link --------------");
+			}
+			dealTag(atag, srb);
+		} else if (node instanceof RemarkNode) {// 判斷是否是注釋
+			// System.out.println("this is remark");
+		}
+	}
+
+	/*
+	 * 檢查鏈結是否需要加入列隊
+	 */
+	public void checkLink(String link, Queue<String> queue, String startUrl) {
+		if (link != null && !link.equals("") && link.indexOf("#") == -1) {
+			if (!link.startsWith("http://") && !link.startsWith("ftp://")
+					&& !link.startsWith("www.")) {
+				link = "file:///" + link;
+			} else if (link.startsWith("www.")) {
+				link = "http://" + link;
+			}
+			// 過濾非此區段開頭的網址
+			if(!link.startsWith(startUrl)){
+				return;
+			}
+			
+			if (queue.isEmpty()){
+				queue.add(link);
+			} else {
+				String link_end_ = link.endsWith("/") ? link.substring(0, link
+						.lastIndexOf("/")) : (link + "/");
+				if (!queue.contains(link) && !queue.contains(link_end_)) {
+					queue.add(link);
+				}
+			}
+		}
+	}
+
+	/**
+	 * 檢查該鏈結是否已經被掃描
+	 * 
+	 * @param list
+	 * @param url
+	 * @return
+	 */
+	public boolean isSearched(List<String> list, String url) {
+		String url_end_ = "";
+		if (url.endsWith("/")) {
+			url_end_ = url.substring(0, url.lastIndexOf("/"));
+		} else {
+			url_end_ = url + "/";
+		}
+		if (list.size() > 0) {
+			if (list.indexOf(url) != -1 || list.indexOf(url_end_) != -1) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 檢查URL是否被允許搜索
+	 * 
+	 * @param urlToCheck
+	 * @return
+	 */
+	private boolean isRobotAllowed(URL urlToCheck) {
+		String host = urlToCheck.getHost().toLowerCase();// 獲取給出RUL的主機
+		// System.out.println("主機="+host);
+
+		// 獲取主機不允許搜索的URL緩存
+		ArrayList<String> disallowList = disallowListCache.get(host);
+
+		// 如果還沒有緩存,下載並緩存。
+		if (disallowList == null) {
+			disallowList = new ArrayList<String>();
+			try {
+				URL robotsFileUrl = new URL("http://" + host + "/robots.txt");
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(robotsFileUrl.openStream()));
+
+				// 讀robot檔，創建不允許訪問的路徑列表。
+				String line;
+				while ((line = reader.readLine()) != null) {
+					if (line.indexOf("Disallow:") == 0) {// 是否包含"Disallow:"
+						String disallowPath = line.substring("Disallow:".length());// 獲取不允許訪問路徑
+
+						// 檢查是否有注釋。
+						int commentIndex = disallowPath.indexOf("#");
+						if (commentIndex != -1) {
+							disallowPath = disallowPath.substring(0, commentIndex);// 去掉注釋
+						}
+
+						disallowPath = disallowPath.trim();
+						disallowList.add(disallowPath);
+					}
+				}
+				for (Iterator<String> it = disallowList.iterator(); it.hasNext();) {
+					System.out.println("Disallow is :" + it.next());
+				}
+				// 緩存此主機不允許訪問的路徑。
+				disallowListCache.put(host, disallowList);
+			} catch (Exception e) {
+				return true; // web站點根目錄下沒有robots.txt文件,返回真
+			}
+		}
+
+		String file = urlToCheck.getFile();
+		// System.out.println("文件getFile()="+file);
+		for (int i = 0; i < disallowList.size(); i++) {
+			String disallow = disallowList.get(i);
+			if (file.startsWith(disallow)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static void main(String[] args) {
+
+		UrlUtil.getIIIUrlUtils("");
+		Spider ph = new Spider("Wiki", "http://zh.wikipedia.org/wiki/Wiki");
+//		Spider ph2 = new Spider("資策會", "http://zh.wikipedia.org/wiki/Wiki");
+		try {
+			// ph.processHtml();
+			Thread search = new Thread(ph);
+			search.start();// 啟動線程
+			
+//			Thread search2 = new Thread(ph2);
+//			search2.start();// 啟動線程
+		} catch (Exception ex) {
+
+		}
+
+	}
+
+}
