@@ -1,6 +1,3 @@
-/*
- * Copyright (c) 2009. 財團法人資訊工業策進會. All right reserved.
- */
 package utils;
 
 /**
