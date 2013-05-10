@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2009. 財團法人資訊工業策進會. All right reserved.
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
  */
 package cobweb;
 
@@ -14,8 +14,8 @@ import engine.ThreadSpider;
 import model.WebPage;
 
 /**
- * 實作一個讀取準備好的WebPage集合的文字檔Spider
- * @author 960122
+ * Multi-thread spider engine, tmp data are stored in a file
+ * @author A-Ho
  */
 public class FileBasedCobweb extends ThreadSpider {
 	

@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2009. 財團法人資訊工業策進會. All right reserved.
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
  */
 package database;
 
@@ -12,16 +12,12 @@ import java.util.List;
 /**
  * SQL Updater
  * 
- * @author 960122
+ * @author A-Ho
  */
 public class SqlUpdater {
 
-	/** 資料庫連線 */
 	private Connection connetion;
 
-	/**
-	 * 建構子
-	 */
 	public SqlUpdater(Connection connetion) {
 		this.connetion = connetion;
 	}
@@ -31,7 +27,7 @@ public class SqlUpdater {
 			Statement stmt = connetion.createStatement();
 			return stmt.executeUpdate(sql);
 		} catch (SQLException e) {
-			System.out.println("SQL錯誤:" + sql);
+			System.out.println("Error sql statement:" + sql);
 			e.printStackTrace();
 		}
 		return 0;
@@ -48,7 +44,7 @@ public class SqlUpdater {
 			stmt.executeUpdate();
 			stmt.clearParameters();
 		} catch (SQLException e) {
-			System.out.println("資料庫更新語法錯誤:" + sql);
+			System.out.println("Error sql statement:" + sql);
 			e.printStackTrace();
 		}
 

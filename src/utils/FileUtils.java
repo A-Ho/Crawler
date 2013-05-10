@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
+ */
 package utils;
 
 import java.io.File;
@@ -9,7 +12,7 @@ import java.io.IOException;
 
 /**
  * 檔案處理工具
- * @author Sean Chang
+ * @author A-Ho
  */
 public class FileUtils {
 

@@ -1,13 +1,14 @@
-/*
- * Copyright (c) 2009. 財團法人資訊工業策進會. All right reserved.
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
  */
 package engine;
 
 import model.WebPage;
 
 /**
- * 格式化輸出的資料
- * @author 960122
+ * The format of the output .txt file
+ * 
+ * @author A-Ho
  */
 public class CrawlResultFormat {
 	

@@ -1,48 +1,38 @@
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
+ */
 package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class JDBCConnector {
 
+	final static String JDBC_DRIVER_MYSQL= "com.mysql.jdbc.Driver";
+	final static String JDBC_URI_MYSQL= "jdbc:mysql://";
+	
 	/**
-	 * 
+	 * Get default system JDBC connection
 	 */
 	public static Connection getWDMRConnetion(final String url, final String database//
 			, final String user, final String password//
 	) {
 		
-		final String driver = "com.mysql.jdbc.Driver";
-		final String connetUrl = "jdbc:mysql://" + url + "/" + database;
+		final String connetUrl = JDBCConnector.JDBC_URI_MYSQL + url + "/" + database;
 		try {
-			Class.forName(driver);
+			Class.forName(JDBCConnector.JDBC_DRIVER_MYSQL);
 			Connection conn = DriverManager.getConnection(connetUrl, user, password);
-//			conn.setAutoCommit(false);
-//			System.out.println("資料庫連接成功");
-			
-//			Statement stmt = conn.createStatement();
-//			stmt.executeUpdate("INSERT INTO ACCOUNT VALUES('test', '123')");
-//			stmt.
-//			conn.commit();
 			return conn;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			System.out.println("找不到驅動程式類別");
+			System.out.println("DB driver classes were not found.");
 			e.printStackTrace();
 		}
 		
-		System.out.println("連接資料庫失敗");
-		return null;
+		System.out.println("Connect DB failed.");
+		return null; //TODO sould return error messge object
 	}
 
-	public static void main(String[] args) {
-		
-		JDBCConnector.getWDMRConnetion("localhost:3306", "wdmr_base", "wdmr", "wdmr135");
-		
-//		String insertSql = "INSERT INTO ACCOUNT VALUES (";
-		
-	}
 }

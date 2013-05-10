@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2009. 財團法人資訊工業策進會. All right reserved.
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
  */
 package cobweb;
 
@@ -24,8 +24,8 @@ import utils.PerformanceTester;
 import utils.HttpProxySetter;
 
 /**
- * 多線程 Spider Engine, 暫存資料由記憶體處理 
- * @author 960122
+ * Multi-thread spider engine, tmp data are stored on disk
+ * @author A-Ho
  */
 public class DiskBasedCobweb implements ICobweb {
 
@@ -96,58 +96,12 @@ public class DiskBasedCobweb implements ICobweb {
 			
 			String line = "";
 			while((line = in.readLine()) != null){
-//				System.out.println(line);
 				bw.write(line + "\r\n");
-//				bw.write(line);
-//				bw.write("\r\n");
 			}
-//			in.reset();
 			bw.write(url);
-//			in.close();
-//			bw.close();
-//			FileUtils.delete(searchedSitesFilePath);
-//			FileUtils.rename(tmpSearchedSitesFilePath , searchedSitesFilePath);
 		}catch (Exception ex){
 			System.out.println(ex);
 		}
-	}
-	
-	
-	public static void main(String[] args) {
-//		HttpProxySetter.IIISetting();
-		
-		final String goalName = "ez";
-//		final String wikiUrl = "http://zh.wikipedia.org/zh-tw/%E7%B6%AD%E5%9F%BA%E7%99%BE%E7%A7%91";
-		final String wikiUrl = "http://www.2888.me";
-		final String filePath = "E://WDMRDB//Wiki//";
-		DiskBasedCobweb multiThreadSpider = new DiskBasedCobweb();
-		PerformanceTester pt = new PerformanceTester();
-		pt.startPoint("peek");
-		for(int i=0;i<30;i++){
-			multiThreadSpider.addSearchedSites(wikiUrl);
-		}
-		
-		pt.stopPoint("peek");
-		pt.printResult();
-		
-//		int threadCount = 4;
-//		ThreadSpider[] phs = new ThreadSpider[threadCount];
-//		for(int i=0;i<phs.length;i++){
-//			phs[i] = new ThreadSpider(goalName, wikiUrl, filePath, multiThreadSpider);
-//		}
-//		Thread[] searchs = new Thread[threadCount];
-//		for(int i=0;i<searchs.length;i++){
-//			searchs[i] = new Thread(phs[i]);
-//			searchs[i].start();
-//			try {
-//				Thread.sleep(2000);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-
-
 	}
 	
 	public Queue<String> getUnsearchList(){
@@ -222,11 +176,6 @@ public class DiskBasedCobweb implements ICobweb {
 			} else if (link.startsWith("www.")) {
 				link = "http://" + link;
 			}
-			//過濾非此區段開頭的網址
-//			if (!link.startsWith(startUrl)) {
-//				link = null;
-//				return;
-//			}
 			startUrl = null;
 
 			if (this.unsearchList.isEmpty()) {

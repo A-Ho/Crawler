@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2009. 財團法人資訊工業策進會. All right reserved.
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
  */
 package engine.customize;
 
@@ -23,8 +23,8 @@ import engine.Parser;
 import engine.ThreadSpider;
 
 /**
- * 雅虎生活+
- * @author 960122
+ * Yahoo lifestyle+
+ * @author A-Ho
  */
 public class YahooLifestyleSpider extends ThreadSpider {
 
@@ -109,11 +109,6 @@ public class YahooLifestyleSpider extends ThreadSpider {
 				}
 			}
 			
-//			count++;
-//			if(count%100 == 0){
-//				System.out.println("尚未探勘數目: " + cobweb.getUnsearchQueue().size());
-//				System.gc();
-//			}
 		}
 		
 		closeOutput();

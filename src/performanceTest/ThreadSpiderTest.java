@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
+ */
 package performanceTest;
 
 import java.io.File;

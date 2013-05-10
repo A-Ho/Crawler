@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
+ */
 package ui;
 import java.awt.Dimension;
 
@@ -28,8 +31,8 @@ public class SpiderMask extends JFrame {
         JFileChooser fc = new JFileChooser();
 //        panel.add(fc);
         
-        JLabel urlLabel = new JLabel("請輸入起始URL：");
-        JLabel depthLabel = new JLabel("請輸入爬行深度：");
+        JLabel urlLabel = new JLabel("Enter start URI：");
+        JLabel depthLabel = new JLabel("Enter max spiding depth：");
 //        JLabel ouputLabel = new JLabel("請選擇輸出目錄：");
         
         JTextField urlTf = new JTextField();
@@ -45,11 +48,11 @@ public class SpiderMask extends JFrame {
         panel.add(depthLabel);
         panel.add(depthTf);
         
-        JButton outputButton = new JButton("選擇輸出目錄");
+        JButton outputButton = new JButton("Output directory:");
         panel.add(outputButton);
         panel.add(outputTf);
         
-        JButton button = new JButton("開始");
+        JButton button = new JButton("Run");
         panel.add(button);
 
         add(panel);

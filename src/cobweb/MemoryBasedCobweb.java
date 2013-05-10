@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2009. 財團法人資訊工業策進會. All right reserved.
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
  */
 package cobweb;
 
@@ -14,16 +14,16 @@ import model.WebPage;
 
 
 /**
- * 多線程 Spider Engine, 暫存資料由磁碟處理 
- * @author 960122
+ * Multi-thread spider engine, tmp data are stored on memory
+ * @author A-Ho
  */
 public class MemoryBasedCobweb implements ICobweb {
 
-	private List<String> searchedSitesList = new ArrayList<String>();// 已經被搜索站點列表
+	private List<String> searchedSitesList = new ArrayList<String>();
 
-	private Queue<String> unsearchSitesList = new LinkedList<String>();// 需解析的鏈結列表
+	private Queue<String> unsearchSitesList = new LinkedList<String>();
 
-	private Queue<WebPage> unsearchQueue = new LinkedList<WebPage>();// 需解析的鏈結列表
+	private Queue<WebPage> unsearchQueue = new LinkedList<WebPage>();
 	
 	protected List<String> downloadRangeList = new LinkedList<String>();
 
@@ -33,7 +33,6 @@ public class MemoryBasedCobweb implements ICobweb {
 	
 	@Override
 	public synchronized void addUnsearchQueue(WebPage wp) {
-//		System.out.println("增加: "+ wp.getUrl());
 		getUnsearchQueue().add(wp);
 	}
 	
@@ -50,17 +49,8 @@ public class MemoryBasedCobweb implements ICobweb {
 	@Override
 	public synchronized WebPage peekUnsearchQueue() {
 		final WebPage result = (WebPage)getUnsearchQueue().poll();
-//		this.unsearchQueue.iterator().remove();
-//		System.out.println("消耗: "+result.getUrl());
 		return result;
 	}
-
-//	/**
-//	 * @param unsearchQueue the unsearchQueue to set
-//	 */
-//	public synchronized void addUnsearchQueue(Queue<WebPage> unsearchQueue) {
-//		this.unsearchQueue = unsearchQueue;
-//	}
 
 	/**
 	 * @return the searchedSites
@@ -79,8 +69,6 @@ public class MemoryBasedCobweb implements ICobweb {
 	
 	public synchronized String peekUnsearchList(){
 		final String url = this.unsearchSitesList.poll().toString();
-//		this.unsearchSitesList.iterator().remove();
-//		this.unsearchSitesList.remove();
 		return url;
 	}
 	
@@ -99,11 +87,6 @@ public class MemoryBasedCobweb implements ICobweb {
 			} else if (link.startsWith("www.")) {
 				link = "http://" + link;
 			}
-			//過濾非此區段開頭的網址
-//			if (!link.startsWith(startUrl)) {
-//				link = null;
-//				return;
-//			}
 			startUrl = null;
 
 			if (this.unsearchSitesList.isEmpty()) {

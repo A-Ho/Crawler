@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2009. 財團法人資訊工業策進會. All right reserved.
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
  */
 package engine.customize;
 
@@ -16,14 +16,12 @@ import org.htmlparser.util.ParserException;
 import cobweb.ICobweb;
 import cobweb.MemoryBasedCobweb;
 
-import utils.HttpProxySetter;
-
 import model.WebPage;
 import engine.ThreadSpider;
 
 /**
  * 
- * @author 960122
+ * @author A-Ho
  */
 public class WikiTreeNodeFactorSpider extends ThreadSpider {
 
@@ -157,33 +155,7 @@ public class WikiTreeNodeFactorSpider extends ThreadSpider {
 			atag = null;
 		}
 	}
-	
-	public static void main(String[] args) throws Exception {
-//		HttpProxySetter.IIISetting();
-		
-//		final String url = "http://zh.wikipedia.org/zh-tw/Wikipedia:%E5%88%86%E9%A1%9E%E7%B4%A2%E5%BC%95";
-		final String url = "";
-		final String filePath = "C://WDMRDB//Wiki//";
-		MemoryBasedCobweb multiThreadSpider = new MemoryBasedCobweb();
-		WebPage wp = new WebPage();
-		wp.setDepth(1);
-		wp.setUrl(url);
-		multiThreadSpider.addUnsearchQueue(wp);
-		
-		multiThreadSpider.addDownloadRangeList("http://zh.wikipedia.org/zh-tw");
-		
-		final int threadCount = 1;
-		WikiTreeNodeFactorSpider[] phs = new WikiTreeNodeFactorSpider[threadCount];
-		for(int i=0;i<phs.length;i++){
-			phs[i] = new WikiTreeNodeFactorSpider(url, filePath, multiThreadSpider, 7);
-		}
-		Thread[] searchs = new Thread[threadCount];
-		for(int i=0;i<searchs.length;i++){
-			searchs[i] = new Thread(phs[i]);
-			searchs[i].start();
-//			Thread.sleep(3000);
-		}
-	}
+
 	
 }
 

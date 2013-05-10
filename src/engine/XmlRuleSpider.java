@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2009. 財團法人資訊工業策進會. All right reserved.
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
  */
 package engine;
 
@@ -20,8 +20,9 @@ import cobweb.ICobweb;
 import cobweb.MemoryBasedCobweb;
 
 /**
- * 設定spider的工作內容
- * @author 960122
+ * XML config helper for spider
+ * 
+ * @author A-Ho
  */
 public class XmlRuleSpider {
 	
@@ -42,7 +43,7 @@ public class XmlRuleSpider {
 	ICobweb cobweb;
 	
 	/**
-	 * 僅提供嚴謹的建構子
+	 * Only public this constructor
 	 */
 	public XmlRuleSpider(final String filePath){
         this.cobweb = new MemoryBasedCobweb();

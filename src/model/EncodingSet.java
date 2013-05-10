@@ -1,11 +1,11 @@
-/*
- * Copyright (c) 2009. 財團法人資訊工業策進會. All right reserved.
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
  */
 package model;
 
 /**
- * 編碼集合
- * @author 960122
+ * Encode
+ * @author A-Ho
  */
 public class EncodingSet {
 
@@ -42,11 +42,6 @@ public class EncodingSet {
 		
 		// 預設UTF8
 		return ENCODE.UTF8;
-	}
-	
-	public static void main(String[] args) {
-//		System.out.println(ENCODE.Big5.getValue());
-		System.out.println(getEncode("big5"));
 	}
 	
 }

@@ -1,10 +1,9 @@
-/*
- * Copyright (c) 2009. 財團法人資訊工業策進會. All right reserved.
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
  */
 package database;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -12,15 +11,15 @@ import java.sql.Statement;
 
 /**
  * 
- * @author 960122
+ * @author A-Ho
  */
 public class SqlSelector {
 
-	/** 資料庫連線 */
+	/** DB  Connection*/
 	private Connection connetion;
 
 	/**
-	 * 建構子
+	 * Constructor
 	 */
 	public SqlSelector(Connection connetion) {
 		this.connetion = connetion;

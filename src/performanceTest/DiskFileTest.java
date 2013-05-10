@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2009. 財團法人資訊工業策進會. All right reserved.
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
  */
 package performanceTest;
 
@@ -12,7 +12,7 @@ import utils.PerformanceTester;
 
 /**
  * 
- * @author 960122
+ * @author A-Ho
  */
 public class DiskFileTest {
 	final long testTimes = 1000000;

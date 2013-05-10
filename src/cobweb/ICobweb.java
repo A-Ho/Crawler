@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
+ */
 package cobweb;
 
 import java.util.List;
@@ -8,7 +11,7 @@ import model.WebPage;
 /**
  * Spider 會使用到的網頁連結來源集結處
  * Inteface: 目前使用JVM Memory、File、DB三種方式實作
- * @author Sean Chang
+ * @author A-Ho
  */
 public abstract interface ICobweb {
 	

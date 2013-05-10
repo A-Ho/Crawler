@@ -1,9 +1,11 @@
+/*
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
+ */
 package utils;
 
 /**
  * Proxy 設定者
- *  
- * @author 960122
+ * @author A-Ho
  */
 public class HttpProxySetter {
 
@@ -45,62 +47,35 @@ public class HttpProxySetter {
 		
 	}
 	
-//	public static String III_PROXY_HOST = "proxy.iii.org.tw";
-//	public static String III_PROXY_PORT = "3128";
-//	
-//	/** 資策會 Proxy 設定 */
-//	private static HttpProxySetter IIIUrlUtil;
-//	
-//	/** 取得資策會內部使用的 UrlUtils */
-//	public static HttpProxySetter getIIIUrlUtils() {
-//		if(IIIUrlUtil == null){
-//			ProxyInfo proxyInfo = new ProxyInfo();
-//			proxyInfo.setHost(III_PROXY_HOST);
-//			proxyInfo.setPort(III_PROXY_PORT);
-//			IIIUrlUtil = new HttpProxySetter(proxyInfo);
-//		}
-//		
-//		return IIIUrlUtil;
-//	}
-
-//	public static void IIISetting(){
-//		System.setProperty("http.proxyHost", III_PROXY_HOST);
-//		System.setProperty("http.proxyPort", III_PROXY_PORT);
-//	}
-
 	
 	/************************************************************
-	 * CHTTL Proxy 
+	 * Dynamic proxy 
 	 ************************************************************/
-	public static String CHTTL_PROXY_HOST = "proxy.cht.com.tw";
-	public static String CHTTL_PROXY_PORT = "8080";
+	public static String DYNA_PROXY_HOST = "proxy.XXX.XXX";
+	public static String DYNA_PROXY_PORT = "8080";
 	
-	private static HttpProxySetter CHTTLUrlUtil;
+	private static HttpProxySetter UrlUtil;
 	
-	/** 取得資策會內部使用的 UrlUtils */
 	public static HttpProxySetter getCHTTLUrlUtils() {
-		if(CHTTLUrlUtil == null){
+		if(UrlUtil == null){
 			ProxyInfo proxyInfo = new ProxyInfo();
-			proxyInfo.setHost(CHTTL_PROXY_HOST);
-			proxyInfo.setPort(CHTTL_PROXY_PORT);
-			CHTTLUrlUtil = new HttpProxySetter(proxyInfo);
+			proxyInfo.setHost(DYNA_PROXY_HOST);
+			proxyInfo.setPort(DYNA_PROXY_PORT);
+			UrlUtil = new HttpProxySetter(proxyInfo);
 		}
 		
-		return CHTTLUrlUtil;
+		return UrlUtil;
 	}
 	
 	public static void CHTTLSetting(){
-		System.setProperty("http.proxyHost", CHTTL_PROXY_HOST);
-		System.setProperty("http.proxyPort", CHTTL_PROXY_PORT);
-		System.setProperty("https.proxyHost", CHTTL_PROXY_HOST);
-		System.setProperty("https.proxyPort", CHTTL_PROXY_PORT);
+		System.setProperty("http.proxyHost", DYNA_PROXY_HOST);
+		System.setProperty("http.proxyPort", DYNA_PROXY_PORT);
+		System.setProperty("https.proxyHost", DYNA_PROXY_HOST);
+		System.setProperty("https.proxyPort", DYNA_PROXY_PORT);
 	}
 
-//	public HttpProxySetter(String url) {
-//	}
-
 	/**
-	 * TODO[昇賀] 未來考慮設計為 public ?
+	 * TODO 未來考慮設計為 public ?
 	 */
 	private HttpProxySetter(ProxyInfo proxy) {
 		System.setProperty("http.proxyHost", proxy.getHost());

@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2009. 財團法人資訊工業策進會. All right reserved.
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
  */
 package engine.customize;
 
@@ -20,7 +20,7 @@ import utils.HttpProxySetter;
 
 /**
  * 
- * @author 960122
+ * @author A-Ho
  */
 public class WikiDataAnalyzer {
 	
@@ -36,15 +36,11 @@ public class WikiDataAnalyzer {
 			count++;
 			leavesSet.add(line);
 		}
+		br.close();
 		return count;
 	}
 	
 	public static void divideLargeFile(final String filePath) throws IOException {
-		int allLeavesCount = buildLeavesSet(filePath);
-//		System.out.println("總共擷取的葉子數目: " + allLeavesCount);
-//		System.out.println("沒有重複的葉子數目: " + leavesSet.size());
-		
-		File leavesFile = new File(filePath);
 		int fileIndex = 0;
 		File extractFile = new File("E://WDMRDB//Wiki//2009-11-5_LeavesNode_" + fileIndex + ".txt");
 		FileWriter extractFileWriter = new FileWriter(extractFile);
@@ -71,16 +67,13 @@ public class WikiDataAnalyzer {
 				count++;
 			}
 		}
+		br.close();
 		return count;
 	}
 	
 	public static void spy(final String inputFilePath) throws IOException{
-//		HttpProxySetter.IIISetting();
-		
-//		final String outputFilePath = "E://WDMRDB//Wiki//";
 		MemoryBasedCobweb multiThreadSpider = new MemoryBasedCobweb();
 		
-//		buildLeavesSet(inputFilePath);
 		File leavesFile = new File(inputFilePath);
 		FileReader leavesFileReader = new FileReader(leavesFile);
 		BufferedReader br = new BufferedReader(leavesFileReader);
@@ -90,6 +83,7 @@ public class WikiDataAnalyzer {
 			count++;
 			leavesSet.add(line);
 		}
+		br.close();
 		for(String tmpUrl : leavesSet){
 			String[] split = tmpUrl.split(" ,");
 			if(split.length != 3){
@@ -97,32 +91,9 @@ public class WikiDataAnalyzer {
 			}
 			multiThreadSpider.addUnsearchQueue(new WebPage(Integer.valueOf(split[1].substring(6,7)), split[0]));
 		}
-		System.out.println("此檔案吃進的 url 數量: "+count);
 		FileBasedCobweb phs = new FileBasedCobweb(null, null, multiThreadSpider);
 		phs.spy(inputFilePath);
 
 	}
-	
-    public static void main(String[] args) throws Exception {
-//    	WikiDataAnalyzer.divideLargeFile("E:\\WDMRDB\\Wiki\\2009-11-5_18-17-27.leavesNode.txt.ext");
-    	
-//    	for(int i=0;i<=21;i++){
-//    		spy("E:\\WDMRDB\\Wiki\\2009-11-5_18-17-27.leavesNode.txt.ext("+i+")");
-//    	}
-    	
-//    	spy("E:\\WDMRDB\\Wiki\\切成220份\\2009-11-5_LeavesNode_10.txt");
-    	for(String s : args){
-    		if(s!=null && s!=""){
 
-    			if(s.startsWith("-s:")){
-    				spy(s.split(":")[1]);
-    				System.out.println(s.split(":")[1]);
-    			}
-    			
-    		}
-    	}
-    	
-//    	System.out.println(countPageHtmlCode("E:\\WDMRDB\\Wiki\\2009-11-5_18-17-27.leavesNode.txt.ext(0).leavesContent.txt"));
-    }
-    
 }

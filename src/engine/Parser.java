@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2009. 財團法人資訊工業策進會. All right reserved.
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
  */
 package engine;
 
@@ -9,17 +9,15 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import utils.HttpProxySetter;
-
 import model.WebPage;
 
 /**
- * 網頁剖析器
- * @author 960122
+ * Web page parser
+ * @author A-Ho
  */
 public class Parser {
 
-	/** 擷取該網頁的Html */
+	/** Fetch Html from the web page*/
 	public static String toPureHtml(WebPage wp){
 		final StringBuffer result = new StringBuffer();
 		try {
@@ -35,21 +33,12 @@ public class Parser {
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 		} catch (IOException e) {
-			System.out.println("剖析網頁發生錯誤:\n" + e);
+			System.out.println("Parsing error:\n" + e);
 		} catch (Exception e) {
-			System.out.println("連接網頁錯誤:\n" + e);
+			System.out.println("Connecting error:\n" + e);
 		}
 		
 		return result.toString();
 	}
 	
-	
-	public static void main(String[] args) throws InterruptedException {
-//		HttpProxySetter.IIISetting();
-		for(int i=0;i<100;i++){
-			WebPage wp = new WebPage(0, "http://www.cloud.org.tw/?q=node");
-//            Thread.sleep(30000);			
-            System.out.println("這是第幾次: " + i);
-		}
-	}
 }

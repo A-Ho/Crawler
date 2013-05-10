@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
+ */
 package cobweb;
 
 import java.sql.Connection;
@@ -13,15 +16,12 @@ import java.util.Queue;
 
 import model.WebPage;
 
-import database.JDBCConnector;
 import database.SqlParameter;
 import database.SqlUpdater;
 
-import utils.HttpProxySetter;
-
 /**
- * 多線程 Spider Engine, 比對資料由DB處理 
- * @author 960122
+ * Multi-thread spider engine, tmp data are stored in DB
+ * @author A-Ho
  */
 public class DBBasedCobweb implements ICobweb {
 
@@ -64,13 +64,14 @@ public class DBBasedCobweb implements ICobweb {
 	}
 	
 	public void addSearchedSites(String url){
-//		List<SqlParameter> sqlParamList = new LinkedList<SqlParameter>();
-//		sqlParamList.add(new SqlParameter(Types.VARCHAR, url));
-//		sqlParamList.add(new SqlParameter(Types.TIMESTAMP, new java.sql.Timestamp(new Date().getTime())));
-//		final StringBuilder sql = new StringBuilder();
-//		sql.append("INSERT INTO SEACHED_URL_WIKI (URL, UPDATE_TIME) VALUES (?, ?)");
-//		this.sqlUpdater.executeSql(sql.toString(), sqlParamList);
-
+		/*
+		List<SqlParameter> sqlParamList = new LinkedList<SqlParameter>();
+		sqlParamList.add(new SqlParameter(Types.VARCHAR, url));
+		sqlParamList.add(new SqlParameter(Types.TIMESTAMP, new java.sql.Timestamp(new Date().getTime())));
+		final StringBuilder sql = new StringBuilder();
+		sql.append("INSERT INTO SEACHED_URL_WIKI (URL, UPDATE_TIME) VALUES (?, ?)");
+		this.sqlUpdater.executeSql(sql.toString(), sqlParamList);
+        */
 		this.sqlUpdater.executeSql("INSERT INTO SEACHED_URL_WIKI (URL) VALUES ('"+url+"')");
 	}
 	
@@ -95,7 +96,7 @@ public class DBBasedCobweb implements ICobweb {
 					return null;
 				}
 			}
-			//殺掉取出來這筆
+			// Remove searched URI
 			stmt.executeUpdate("Delete From WAIT_SEARCH_URL_WIKI Where Sn = " + sn);
 			stmt.close();
 		} catch (SQLException ex) {
@@ -144,18 +145,6 @@ public class DBBasedCobweb implements ICobweb {
 	 * 檢查該鏈結是否已經被掃描
 	 */
 	public boolean isSearched(String url) {
-		
-//		String url_end_ = "";
-//		if (url.endsWith("/")) {
-//			url_end_ = url.substring(0, url.lastIndexOf("/"));
-//		} else {
-//			url_end_ = url + "/";
-//		}
-//		if (this.searchedSites.size() > 0) {
-//			if (this.searchedSites.indexOf(url) != -1 || this.searchedSites.indexOf(url_end_) != -1) {
-//				return true;
-//			}
-//		}
 		return false;
 	}
 	
@@ -171,9 +160,8 @@ public class DBBasedCobweb implements ICobweb {
 		this.sqlUpdater.executeSql(sql.toString(), sqlParamList);
 	}
 	
+	/*
 	public static void main(String[] args) {
-//		HttpProxySetter.IIISetting();
-		
 		final String wikiUrl = "http://zh.wikipedia.org/wiki/Wiki";
 		final String filePath = "E://WDMRDB//Wiki//";
 		
@@ -185,6 +173,7 @@ public class DBBasedCobweb implements ICobweb {
 		engine.initWiki();
 
 	}
+	*/
 
 	@Override
 	public void checkLink(WebPage srb) {

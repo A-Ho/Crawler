@@ -159,22 +159,4 @@ public class LoadNetFile implements Runnable {
 		}
 	}
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		LoadNetFile lf = new LoadNetFile();
-
-		// 絕對路徑
-		// lf.setLoadData("http://news.sanxia.net.cn/upimg/allimg/090609/1143342.jpg","C:/"
-		// ,"abc");
-
-		// 相對路徑,自己指定副檔名
-		lf.setLoadData(
-				"http://img4.bitautoimg.com/autoalbum/files/20110420/734/22494073435215_1565563_6.jpg",
-				"E:/WDMRDB/photo/", "abc.jpg");
-		lf.startLoad();
-
-	}
-
 }

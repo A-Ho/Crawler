@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2009. 財團法人資訊工業策進會. All right reserved.
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
  */
 package utils;
 
@@ -10,8 +10,7 @@ import java.util.Map;
 /**
  * 紀錄經過時間
  *
- * @author 960122 
- *         在 2009/10/15 建立
+ * @author A-Ho
  */
 public class PerformanceTester {
 
@@ -151,18 +150,5 @@ public class PerformanceTester {
             this.goalMap.put(cal[i].getName(), cal[i]);
         }
     }
-    //##################################
-    //## sub-block : XXXX(可依功能區分) 
-    //##################################
-    //====
-    //== [Method] Block Stop 
-    //================================================
-    //== [Main Method] Block Start
-    //====
-    //public static void main(String[] args) {
-    //  
-    //}
-    //====
-    //== [Main Method] Block Stop 
-    //================================================
+
 }

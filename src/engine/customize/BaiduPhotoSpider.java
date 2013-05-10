@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
+ */
 package engine.customize;
 
 import java.io.File;
@@ -24,8 +27,7 @@ import engine.CrawlResultFormat;
 import engine.ThreadSpider;
 
 /**
- * @author Sean Chang
- *         2013/4/26
+ * @author A-Ho
  */
 public class BaiduPhotoSpider extends ThreadSpider {
 
@@ -92,11 +94,6 @@ public class BaiduPhotoSpider extends ThreadSpider {
 				}
 			}
 			
-//			count++;
-//			if(count%100 == 0){
-//				System.out.println("尚未探勘數目: " + cobweb.getUnsearchQueue().size());
-//				System.gc();
-//			}
 		}
 		
 		closeOutput();

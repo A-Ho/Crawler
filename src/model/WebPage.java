@@ -1,9 +1,12 @@
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
+ */
 package model;
 
 import engine.CrawlResultFormat;
 
 /**
- * 單一網頁的資料結構
+ * Data structure of a web page
  */
 public class WebPage implements java.io.Serializable {
 

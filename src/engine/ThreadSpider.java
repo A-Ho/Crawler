@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2009. 財團法人資訊工業策進會. All right reserved.
+/**
+ * Copyright (c) 2013, A-Ho, sean666666@gmail.com
  */
 package engine;
 
@@ -27,7 +27,7 @@ import cobweb.ICobweb;
 
 /**
  * 線程化的網頁擷取器
- * @author 960122
+ * @author A-Ho
  */
 public class ThreadSpider implements Runnable {
 
