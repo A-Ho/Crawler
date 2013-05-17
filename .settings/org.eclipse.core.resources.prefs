@@ -1,4 +1,4 @@
 eclipse.preferences.version=1
-encoding//src/cobweb/DiskBasedCobweb.java=UTF-8
-encoding//src/cobweb/MemoryBasedCobweb.java=UTF-8
+encoding//src/aho/crawler/cobweb/DiskBasedCobweb.java=UTF-8
+encoding//src/aho/crawler/cobweb/MemoryBasedCobweb.java=UTF-8
 encoding/<project>=UTF-8
